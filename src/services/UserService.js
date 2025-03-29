@@ -16,7 +16,7 @@ export async function createUser(user) {
 
 
 export const loginUser = async (credentials) => {
-    const response = await fetch('URL_DEL_BACKEND/login', {
+    const response = await fetch(BASE_URL+'users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(credentials)
