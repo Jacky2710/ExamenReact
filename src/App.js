@@ -14,7 +14,6 @@ function App() {
             return;
         }
         await createUser(newUser);
-        fetchUsers(); // Actualizar la lista de usuarios
         setNewUser({ name: '', email: '', password: '' }); // Limpiar los campos
     };
 
