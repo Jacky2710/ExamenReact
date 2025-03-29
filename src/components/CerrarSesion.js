@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function Login({ setIsAuthenticated }) {
@@ -10,7 +10,7 @@ function Login({ setIsAuthenticated }) {
     const handleLogin = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("https://tu-api.com/login", { email, password });
+            const response = await axios.post("https://jacky.jeotech.x10.mx/login", { email, password });
             if (response.data.token) {
                 localStorage.setItem("token", response.data.token);
                 setIsAuthenticated(true);
@@ -48,12 +48,13 @@ function Login({ setIsAuthenticated }) {
 function Users() {
     const [users, setUsers] = useState([]);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
                 const token = localStorage.getItem("token");
-                const response = await axios.get("https://tu-api.com/users", {
+                const response = await axios.get("https://jacky.jeotech.x10.mx/users", {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setUsers(response.data);
@@ -64,6 +65,11 @@ function Users() {
         fetchUsers();
     }, []);
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
+
     return (
         <div>
             <h2>Lista de Usuarios</h2>
@@ -73,6 +79,7 @@ function Users() {
                     <li key={user.id}>{user.email}</li>
                 ))}
             </ul>
+            <button onClick={handleLogout}>Cerrar Sesión</button>
         </div>
     );
 }
@@ -86,7 +93,7 @@ function CreateUser() {
         e.preventDefault();
         try {
             const token = localStorage.getItem("token");
-            await axios.post("https://tu-api.com/users", { email, password }, {
+            await axios.post("https://jacky.jeotech.x10.mx/users", { email, password }, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setMessage("Usuario creado exitosamente");
